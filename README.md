@@ -1,2 +1,2 @@
-# bodybuilding
-bodybuilding project
+# fitnesshub
+fitnesshub project

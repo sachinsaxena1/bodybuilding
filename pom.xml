@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- the following CQ connection properties are the default out-of-the-box 
+			CQ settings and are used by all modules in this project. you should override 
+			them in your local settings.xml file if your CQ environment is different. -->
+		<cq.host>localhost</cq.host>
+		<cq.port>7402</cq.port>
+		<cq.user>admin</cq.user>
+		<cq.password>admin</cq.password>
+		<fitnesshub.version>1.1.0-SNAPSHOT</fitnesshub.version>
+	</properties>
+
+	<groupId>com.day.cq.fitnesshub</groupId>
+	<artifactId>parent</artifactId>
+	<version>1.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<description>This is the parent pom</description>
+
+	<profiles>
+		<profile>
+			<id>auto-deploy</id>
+			<modules>
+				<module>core</module>
+				<module>ui</module>
+			</modules>
+		</profile>
+
+	</profiles>
+	<build>
+		<pluginManagement>
+			<plugins>
+	<plugin>
+		<groupId>org.apache.sling</groupId>
+		<artifactId>maven-sling-plugin</artifactId>
+		<version>2.1.6</version>
+	</plugin>
+				<plugin>
+					<groupId>com.day.jcr.vault</groupId>
+					<artifactId>content-package-maven-plugin</artifactId>
+					<version>0.0.24</version>
+					<extensions>true</extensions>
+					<configuration>
+						<verbose>true</verbose>
+						  <username>${cq.user}</username>
+                        <password>${cq.password}</password>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+					<configuration>
+						<instructions>
+							<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+							<Embed-Directory>OSGI-INF/lib</Embed-Directory>
+							<Embed-Transitive>true</Embed-Transitive>
+						</instructions>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-scr-plugin</artifactId>
+					<version>1.24.0</version>
+					<executions>
+						<execution>
+							<id>generate-scr-descriptor</id>
+							<goals>
+								<goal>scr</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>adobe-central</id>
+			<name>Adobe Plugin Repository</name>
+			<url>http://repo.adobe.com/archiva/repository/day-central</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</pluginRepository>
+	</pluginRepositories>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.apache.felix.scr.annotations</artifactId>
+				<version>1.9.0</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
